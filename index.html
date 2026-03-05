@@ -2,115 +2,121 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenClaw 工作状态</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Segoe UI', 'PingFang SC', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
+            color: #fff;
         }
         
         h1 {
-            color: #fff;
-            margin-bottom: 20px;
-            text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
-            font-size: 1.8rem;
             text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
         }
         
         .house {
             display: flex;
-            gap: 30px;
-            justify-content: center;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            max-width: 800px;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 400px;
+            margin: 0 auto;
         }
         
         .room {
-            width: 300px;
-            height: 350px;
-            border-radius: 20px;
+            width: 100%;
+            max-width: 350px;
+            height: 280px;
+            border-radius: 15px;
             position: relative;
             overflow: hidden;
-            flex-shrink: 0;
         }
         
         .bedroom {
             background: linear-gradient(180deg, #2d1b4e 0%, #1a1035 100%);
             border: 3px solid #9d4edd;
-            box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
         }
         
         .office {
             background: linear-gradient(180deg, #1a3a4a 0%, #0d2230 100%);
             border: 3px solid #00b4d8;
-            box-shadow: 0 0 20px rgba(0, 180, 216, 0.3);
         }
         
         .room-label {
             position: absolute;
-            top: 15px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            font-weight: 600;
-            white-space: nowrap;
+            font-size: 0.9rem;
+            font-weight: bold;
         }
         
         .bedroom .room-label { color: #dda0dd; }
         .office .room-label { color: #90e0ef; }
         
-        .room.inactive { opacity: 0.4; }
-        .room.active { opacity: 1; transform: scale(1.02); }
-        
-        /* 小龙虾 - 简化版 */
-        .crayfish {
+        .status {
             position: absolute;
-            bottom: 50px;
+            top: 35px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 80px;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 0.75rem;
         }
         
-        .crayfish-head {
-            width: 45px;
-            height: 35px;
-            background: linear-gradient(180deg, #ff8787 0%, #e03131 100%);
-            border-radius: 22px 22px 15px 15px;
+        .bedroom .status {
+            background: rgba(157, 78, 221, 0.3);
+            color: #dda0dd;
+        }
+        
+        .office .status {
+            background: rgba(0, 180, 216, 0.3);
+            color: #90e0ef;
+        }
+        
+        .inactive { opacity: 0.3; }
+        
+        /* 小龙虾 */
+        .crayfish {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 50px;
+        }
+        
+        .cray-head {
+            width: 35px;
+            height: 25px;
+            background: #ff6b6b;
+            border-radius: 18px 18px 12px 12px;
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             top: 0;
         }
         
-        .crayfish-eye {
-            width: 10px;
-            height: 10px;
+        .cray-eye {
+            width: 8px;
+            height: 8px;
             background: #fff;
             border-radius: 50%;
             position: absolute;
-            top: 8px;
+            top: 5px;
         }
         
-        .crayfish-eye::after {
+        .cray-eye::after {
             content: '';
-            width: 5px;
-            height: 5px;
+            width: 4px;
+            height: 4px;
             background: #000;
             border-radius: 50%;
             position: absolute;
@@ -118,106 +124,72 @@
             left: 2px;
         }
         
-        .crayfish-eye.left { left: 7px; }
-        .crayfish-eye.right { right: 7px; }
+        .cray-eye.l { left: 5px; }
+        .cray-eye.r { right: 5px; }
         
-        .crayfish-antenna {
+        .cray-antenna {
             width: 2px;
-            height: 20px;
+            height: 15px;
             background: #ff8787;
             position: absolute;
-            top: -15px;
+            top: -12px;
             border-radius: 2px;
         }
         
-        .crayfish-antenna.left { left: 12px; transform: rotate(-15deg); }
-        .crayfish-antenna.right { right: 12px; transform: rotate(15deg); }
+        .cray-antenna.l { left: 10px; transform: rotate(-15deg); }
+        .cray-antenna.r { right: 10px; transform: rotate(15deg); }
         
-        .crayfish-body {
-            width: 70px;
-            height: 50px;
+        .cray-body {
+            width: 50px;
+            height: 30px;
             background: linear-gradient(180deg, #ff6b6b 0%, #c92a2a 100%);
-            border-radius: 35px 35px 25px 25px;
+            border-radius: 25px 25px 18px 18px;
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            top: 25px;
+            top: 18px;
         }
         
-        .crayfish-claw {
-            width: 30px;
-            height: 20px;
-            background: linear-gradient(180deg, #ff6b6b 0%, #c92a2a 100%);
-            border-radius: 12px;
-            position: absolute;
-            top: 30px;
-        }
-        
-        .crayfish-claw.left { left: -10px; }
-        .crayfish-claw.right { right: -10px; }
-        
-        .crayfish-claw::before {
-            content: '';
-            width: 16px;
+        .cray-claw {
+            width: 18px;
             height: 12px;
-            background: linear-gradient(180deg, #ff8787 0%, #e03131 100%);
+            background: #ff6b6b;
             border-radius: 8px;
             position: absolute;
-            top: -8px;
-            left: 5px;
+            top: 22px;
         }
         
-        .crayfish-tail {
-            width: 50px;
-            height: 20px;
+        .cray-claw.l { left: -5px; }
+        .cray-claw.r { right: -5px; }
+        
+        .cray-tail {
+            width: 35px;
+            height: 12px;
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
+            gap: 2px;
             justify-content: center;
-            gap: 3px;
         }
         
-        .crayfish-tail-segment {
-            width: 12px;
-            height: 18px;
-            background: linear-gradient(180deg, #ff6b6b 0%, #c92a2a 100%);
-            border-radius: 4px 4px 8px 8px;
+        .cray-tail span {
+            width: 8px;
+            height: 12px;
+            background: #ff6b6b;
+            border-radius: 3px 3px 6px 6px;
         }
         
         /* 卧室装饰 */
-        .bedroom .bed {
+        .moon {
             position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 160px;
-            height: 50px;
-            background: linear-gradient(180deg, #e8d5b7 0%, #d4c4a8 100%);
-            border-radius: 8px;
-        }
-        
-        .bedroom .pillow {
-            position: absolute;
-            bottom: 105px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 25px;
-            background: #fff;
-            border-radius: 12px;
-        }
-        
-        .bedroom .moon {
-            position: absolute;
-            top: 50px;
+            top: 60px;
             right: 30px;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             background: #ffe066;
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 224, 102, 0.6);
         }
         
         .star {
@@ -226,340 +198,143 @@
             height: 3px;
             background: #fff;
             border-radius: 50%;
-            animation: twinkle 2s infinite;
         }
         
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+        .bed {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 35px;
+            background: #e8d5b7;
+            border-radius: 6px;
+        }
+        
+        .pillow {
+            position: absolute;
+            bottom: 72px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 18px;
+            background: #fff;
+            border-radius: 8px;
         }
         
         /* 办公室装饰 */
-        .office .desk {
+        .computer {
             position: absolute;
-            bottom: 45px;
+            bottom: 65px;
             left: 50%;
             transform: translateX(-50%);
-            width: 180px;
-            height: 70px;
-            background: linear-gradient(180deg, #8b5a2b 0%, #654321 100%);
-            border-radius: 4px;
-        }
-        
-        .office .computer {
-            position: absolute;
-            bottom: 115px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70px;
-            height: 52px;
-            background: #333;
-            border-radius: 4px;
-            border: 2px solid #555;
-        }
-        
-        .office .computer-screen {
-            width: 60px;
+            width: 50px;
             height: 38px;
+            background: #333;
+            border-radius: 3px;
+        }
+        
+        .screen {
+            width: 42px;
+            height: 28px;
             background: linear-gradient(180deg, #00d4ff 0%, #0077b6 100%);
             border-radius: 2px;
-            margin: 5px auto;
-            animation: screenGlow 3s infinite;
+            margin: 4px auto;
         }
         
-        @keyframes screenGlow {
-            0%, 100% { box-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.8); }
-        }
-        
-        .office .lamp {
+        .desk {
             position: absolute;
-            bottom: 115px;
-            right: 30px;
-            width: 16px;
-            height: 35px;
-            background: #666;
-            border-radius: 2px;
-        }
-        
-        .office .lamp::before {
-            content: '';
-            position: absolute;
-            top: -12px;
-            left: -8px;
-            width: 32px;
-            height: 16px;
-            background: #ffe066;
-            border-radius: 4px 4px 0 0;
-            box-shadow: 0 0 15px rgba(255, 224, 102, 0.6);
-        }
-        
-        .status-indicator {
-            position: absolute;
-            top: 45px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 6px 16px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            white-space: nowrap;
+            width: 140px;
+            height: 45px;
+            background: #8b5a2b;
+            border-radius: 3px;
         }
         
-        .status-indicator.working {
-            background: rgba(0, 180, 216, 0.3);
-            color: #90e0ef;
-            border: 2px solid #00b4d8;
+        .lamp {
+            position: absolute;
+            bottom: 65px;
+            right: 30px;
+            width: 12px;
+            height: 25px;
+            background: #666;
         }
         
-        .status-indicator.idle {
-            background: rgba(157, 78, 221, 0.3);
-            color: #dda0dd;
-            border: 2px solid #9d4edd;
+        .lamp::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -6px;
+            width: 24px;
+            height: 12px;
+            background: #ffe066;
+            border-radius: 3px 3px 0 0;
         }
         
-        .logo {
+        /* 底部信息 */
+        .info {
             position: fixed;
-            top: 15px;
-            left: 15px;
-            color: #ff6b6b;
-            font-weight: bold;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .info-panel {
-            position: fixed;
-            bottom: 15px;
-            left: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.8rem;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             display: flex;
             justify-content: space-between;
         }
         
-        .info-panel .label { color: #888; }
-        .info-panel .value { color: #00d4ff; }
-        
-        /* 手机端 */
-        @media (max-width: 700px) {
-            body {
-                padding: 15px;
-            }
-            
-            h1 {
-                font-size: 1.4rem;
-                margin-bottom: 15px;
-            }
-            
-            .house {
-                gap: 15px;
-            }
-            
-            .room {
-                width: 100%;
-                max-width: 320px;
-                height: 300px;
-            }
-            
-            .crayfish {
-                width: 70px;
-                height: 55px;
-                bottom: 40px;
-            }
-            
-            .crayfish-head {
-                width: 32px;
-                height: 24px;
-                border-radius: 16px 16px 10px 10px;
-            }
-            
-            .crayfish-eye {
-                width: 7px;
-                height: 7px;
-                top: 5px;
-            }
-            
-            .crayfish-eye.left { left: 5px; }
-            .crayfish-eye.right { right: 5px; }
-            
-            .crayfish-eye::after {
-                width: 3px;
-                height: 3px;
-                top: 2px;
-                left: 2px;
-            }
-            
-            .crayfish-antenna {
-                height: 14px;
-                top: -10px;
-            }
-            
-            .crayfish-antenna.left { left: 8px; }
-            .crayfish-antenna.right { right: 8px; }
-            
-            .crayfish-body {
-                width: 48px;
-                height: 34px;
-                top: 18px;
-                border-radius: 24px 24px 18px 18px;
-            }
-            
-            .crayfish-claw {
-                width: 20px;
-                height: 14px;
-                top: 20px;
-            }
-            
-            .crayfish-claw.left { left: -6px; }
-            .crayfish-claw.right { right: -6px; }
-            
-            .crayfish-claw::before {
-                width: 11px;
-                height: 8px;
-                top: -5px;
-                left: 3px;
-            }
-            
-            .crayfish-tail {
-                width: 35px;
-            }
-            
-            .crayfish-tail-segment {
-                width: 8px;
-                height: 12px;
-            }
-            
-            .bedroom .bed {
-                width: 110px;
-                height: 35px;
-                bottom: 45px;
-            }
-            
-            .bedroom .pillow {
-                width: 35px;
-                height: 18px;
-                bottom: 78px;
-            }
-            
-            .bedroom .moon {
-                width: 25px;
-                height: 25px;
-                top: 35px;
-                right: 20px;
-            }
-            
-            .office .desk {
-                width: 120px;
-                height: 45px;
-                bottom: 35px;
-            }
-            
-            .office .computer {
-                width: 48px;
-                height: 36px;
-                bottom: 80px;
-            }
-            
-            .office .computer-screen {
-                width: 40px;
-                height: 26px;
-                margin: 4px auto;
-            }
-            
-            .office .lamp {
-                width: 12px;
-                height: 25px;
-                bottom: 80px;
-                right: 20px;
-            }
-            
-            .office .lamp::before {
-                width: 22px;
-                height: 12px;
-                top: -8px;
-                left: -5px;
-            }
-            
-            .room-label {
-                font-size: 0.85rem;
-                top: 12px;
-            }
-            
-            .status-indicator {
-                top: 35px;
-                font-size: 0.7rem;
-                padding: 4px 10px;
-            }
-            
-            .info-panel {
-                font-size: 0.7rem;
-                padding: 8px 10px;
-            }
-        }
+        .info span:first-child { color: #888; }
+        .info span:last-child { color: #00d4ff; }
     </style>
 </head>
 <body>
-    <div class="logo">🦞 OpenClaw</div>
-    
     <h1>🤖 OpenClaw 工作状态</h1>
     
     <div class="house">
         <!-- 卧室 -->
         <div class="room bedroom" id="bedroom">
-            <span class="room-label">🌙 卧室</span>
-            <div class="status-indicator idle" id="idle-status">😴 休息中</div>
-            
+            <div class="room-label">🌙 卧室</div>
+            <div class="status">😴 休息中</div>
             <div class="moon"></div>
-            <div class="star" style="top: 25px; left: 25px; animation-delay: 0s;"></div>
-            <div class="star" style="top: 45px; left: 60px; animation-delay: 0.5s;"></div>
-            <div class="star" style="top: 30px; left: 120px; animation-delay: 1s;"></div>
-            <div class="star" style="top: 70px; left: 180px; animation-delay: 1.5s;"></div>
-            
+            <div class="star" style="top:20px;left:25px"></div>
+            <div class="star" style="top:40px;left:60px"></div>
+            <div class="star" style="top:30px;left:120px"></div>
             <div class="pillow"></div>
             <div class="bed"></div>
-            
             <div class="crayfish">
-                <div class="crayfish-head">
-                    <div class="crayfish-antenna left"></div>
-                    <div class="crayfish-antenna right"></div>
-                    <div class="crayfish-eye left"></div>
-                    <div class="crayfish-eye right"></div>
+                <div class="cray-head">
+                    <div class="cray-antenna l"></div>
+                    <div class="cray-antenna r"></div>
+                    <div class="cray-eye l"></div>
+                    <div class="cray-eye r"></div>
                 </div>
-                <div class="crayfish-body">
-                    <div class="crayfish-claw left"></div>
-                    <div class="crayfish-claw right"></div>
+                <div class="cray-body">
+                    <div class="cray-claw l"></div>
+                    <div class="cray-claw r"></div>
                 </div>
-                <div class="crayfish-tail">
-                    <div class="crayfish-tail-segment"></div>
-                    <div class="crayfish-tail-segment"></div>
-                    <div class="crayfish-tail-segment"></div>
+                <div class="cray-tail">
+                    <span></span><span></span><span></span>
                 </div>
             </div>
         </div>
         
         <!-- 办公室 -->
         <div class="room office" id="office">
-            <span class="room-label">💼 办公室</span>
-            <div class="status-indicator working" id="working-status">💻工作中</div>
-            
-            <div class="computer">
-                <div class="computer-screen"></div>
-            </div>
+            <div class="room-label">💼 办公室</div>
+            <div class="status">💻工作中</div>
+            <div class="computer"><div class="screen"></div></div>
             <div class="desk"></div>
             <div class="lamp"></div>
         </div>
     </div>
     
-    <div class="info-panel">
-        <span>状态: <span class="value" id="status-text">检查中...</span></span>
-        <span>更新: <span class="value" id="last-update">-</span></span>
+    <div class="info">
+        <span>状态: <b id="status-text">检查中...</b></span>
+        <span id="last-update">-</span>
     </div>
 
     <script>
@@ -569,24 +344,18 @@
             
             const bedroom = document.getElementById('bedroom');
             const office = document.getElementById('office');
-            const statusText = document.getElementById('status-text');
-            const lastUpdate = document.getElementById('last-update');
             
             if (isWorking) {
                 bedroom.classList.add('inactive');
-                bedroom.classList.remove('active');
-                office.classList.add('active');
                 office.classList.remove('inactive');
-                statusText.textContent = '工作中 💻';
+                document.getElementById('status-text').textContent = '工作中 💻';
             } else {
                 office.classList.add('inactive');
-                office.classList.remove('active');
-                bedroom.classList.add('active');
                 bedroom.classList.remove('inactive');
-                statusText.textContent = '闲置中 😴';
+                document.getElementById('status-text').textContent = '闲置中 😴';
             }
             
-            lastUpdate.textContent = new Date().toLocaleTimeString('zh-CN');
+            document.getElementById('last-update').textContent = new Date().toLocaleTimeString('zh-CN');
         }
         
         checkStatus();
