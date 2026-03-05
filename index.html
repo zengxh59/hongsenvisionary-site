@@ -3,50 +3,453 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hongsen Visionary</title>
+    <title>OpenClaw 工作状态</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
+            overflow: hidden;
         }
-        .container {
-            text-align: center;
-            padding: 40px;
-        }
-        .hero-image {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 30px;
-            border: 4px solid rgba(255,255,255,0.2);
-            box-shadow: 0 0 30px rgba(0,212,255,0.3);
-        }
+        
         h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #00d4ff, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+            font-size: 2.5rem;
         }
-        p {
-            font-size: 1.5em;
-            opacity: 0.9;
+        
+        .house {
+            display: flex;
+            gap: 40px;
+            perspective: 1000px;
         }
+        
+        .room {
+            width: 350px;
+            height: 400px;
+            border-radius: 20px;
+            position: relative;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        
+        .bedroom {
+            background: linear-gradient(180deg, #2d1b4e 0%, #1a1035 100%);
+            border: 4px solid #9d4edd;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.3), inset 0 0 60px rgba(157, 78, 221, 0.1);
+        }
+        
+        .office {
+            background: linear-gradient(180deg, #1a3a4a 0%, #0d2230 100%);
+            border: 4px solid #00b4d8;
+            box-shadow: 0 0 30px rgba(0, 180, 216, 0.3), inset 0 0 60px rgba(0, 180, 216, 0.1);
+        }
+        
+        .room-label {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .bedroom .room-label { color: #dda0dd; }
+        .office .room-label { color: #90e0ef; }
+        
+        .room.active { transform: scale(1.05); }
+        .room.inactive { opacity: 0.5; filter: grayscale(50%); }
+        
+        /* 小龙虾 */
+        .crayfish {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 100px;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .crayfish-body {
+            width: 80px;
+            height: 60px;
+            background: linear-gradient(180deg, #ff6b6b 0%, #c92a2a 100%);
+            border-radius: 40px 40px 30px 30px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 20px;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        .crayfish-head {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(180deg, #ff8787 0%, #e03131 100%);
+            border-radius: 25px 25px 15px 15px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+        }
+        
+        .crayfish-eye {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+        }
+        
+        .crayfish-eye::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+        }
+        
+        .crayfish-eye.left { left: 8px; }
+        .crayfish-eye.right { right: 8px; }
+        
+        .crayfish-claw {
+            width: 35px;
+            height: 25px;
+            background: linear-gradient(180deg, #ff6b6b 0%, #c92a2a 100%);
+            border-radius: 15px;
+            position: absolute;
+            top: 35px;
+        }
+        
+        .crayfish-claw.left { left: -15px; transform: rotate(-30deg); }
+        .crayfish-claw.right { right: -15px; transform: rotate(30deg); }
+        
+        .crayfish-claw::before {
+            content: '';
+            width: 20px;
+            height: 15px;
+            background: linear-gradient(180deg, #ff8787 0%, #e03131 100%);
+            border-radius: 10px;
+            position: absolute;
+            top: -10px;
+            left: 5px;
+        }
+        
+        .crayfish-antenna {
+            width: 3px;
+            height: 25px;
+            background: #ff8787;
+            position: absolute;
+            top: -20px;
+            border-radius: 3px;
+        }
+        
+        .crayfish-antenna.left { left: 15px; transform: rotate(-20deg); }
+        .crayfish-antenna.right { right: 15px; transform: rotate(20deg); }
+        
+        .crayfish-tail {
+            width: 60px;
+            height: 30px;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .crayfish-tail-segment {
+            width: 15px;
+            height: 25px;
+            background: linear-gradient(180deg, #ff6b6b 0%, #c92a2a 100%);
+            border-radius: 5px 5px 10px 10px;
+        }
+        
+        /* 卧室装饰 */
+        .bedroom .bed {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 60px;
+            background: linear-gradient(180deg, #e8d5b7 0%, #d4c4a8 100%);
+            border-radius: 10px;
+        }
+        
+        .bedroom .pillow {
+            position: absolute;
+            bottom: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 30px;
+            background: #fff;
+            border-radius: 15px;
+        }
+        
+        .bedroom .moon {
+            position: absolute;
+            top: 60px;
+            right: 40px;
+            width: 50px;
+            height: 50px;
+            background: #ffe066;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 224, 102, 0.6);
+        }
+        
+        .bedroom .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        /* 办公室装饰 */
+        .office .desk {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 80px;
+            background: linear-gradient(180deg, #8b5a2b 0%, #654321 100%);
+            border-radius: 5px;
+        }
+        
+        .office .computer {
+            position: absolute;
+            bottom: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 60px;
+            background: #333;
+            border-radius: 5px;
+            border: 3px solid #555;
+        }
+        
+        .office .computer-screen {
+            width: 70px;
+            height: 45px;
+            background: linear-gradient(180deg, #00d4ff 0%, #0077b6 100%);
+            border-radius: 3px;
+            margin: 5px auto;
+            animation: screenGlow 3s infinite;
+        }
+        
+        @keyframes screenGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(0, 212, 255, 0.8); }
+        }
+        
+        .office .lamp {
+            position: absolute;
+            bottom: 140px;
+            right: 40px;
+            width: 20px;
+            height: 40px;
+            background: #666;
+            border-radius: 3px;
+        }
+        
+        .office .lamp::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -10px;
+            width: 40px;
+            height: 20px;
+            background: #ffe066;
+            border-radius: 5px 5px 0 0;
+            box-shadow: 0 0 20px rgba(255, 224, 102, 0.6);
+        }
+        
+        .status-indicator {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.5s;
+        }
+        
+        .status-indicator.working {
+            background: rgba(0, 180, 216, 0.3);
+            color: #90e0ef;
+            border: 2px solid #00b4d8;
+        }
+        
+        .status-indicator.idle {
+            background: rgba(157, 78, 221, 0.3);
+            color: #dda0dd;
+            border: 2px solid #9d4edd;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .info-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .info-panel .label { color: #888; margin-right: 10px; }
+        .info-panel .value { color: #00d4ff; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop" alt="Hero Image" class="hero-image">
-        <h1>Hongsen Visionary</h1>
-        <p>Welcome to my personal website.</p>
+    <div class="logo">
+        🦞 OpenClaw
     </div>
+    
+    <h1>🤖 OpenClaw 工作状态</h1>
+    
+    <div class="house">
+        <!-- 卧室 -->
+        <div class="room bedroom" id="bedroom">
+            <span class="room-label">🌙 卧室（闲置）</span>
+            <div class="status-indicator idle" id="idle-status">😴 休息中</div>
+            
+            <div class="moon"></div>
+            <div class="stars">
+                <div class="star" style="top: 20px; left: 30px; animation-delay: 0s;"></div>
+                <div class="star" style="top: 50px; left: 80px; animation-delay: 0.5s;"></div>
+                <div class="star" style="top: 30px; left: 150px; animation-delay: 1s;"></div>
+                <div class="star" style="top: 80px; left: 200px; animation-delay: 1.5s;"></div>
+                <div class="star" style="top: 100px; left: 60px; animation-delay: 0.3s;"></div>
+                <div class="star" style="top: 120px; left: 280px; animation-delay: 0.8s;"></div>
+            </div>
+            
+            <div class="pillow"></div>
+            <div class="bed"></div>
+            
+            <div class="crayfish" id="crayfish">
+                <div class="crayfish-head">
+                    <div class="crayfish-antenna left"></div>
+                    <div class="crayfish-antenna right"></div>
+                    <div class="crayfish-eye left"></div>
+                    <div class="crayfish-eye right"></div>
+                </div>
+                <div class="crayfish-body">
+                    <div class="crayfish-claw left"></div>
+                    <div class="crayfish-claw right"></div>
+                </div>
+                <div class="crayfish-tail">
+                    <div class="crayfish-tail-segment"></div>
+                    <div class="crayfish-tail-segment"></div>
+                    <div class="crayfish-tail-segment"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 办公室 -->
+        <div class="room office" id="office">
+            <span class="room-label">💼 办公室（工作）</span>
+            <div class="status-indicator working" id="working-status">💻工作中</div>
+            
+            <div class="computer">
+                <div class="computer-screen"></div>
+            </div>
+            <div class="desk"></div>
+            <div class="lamp"></div>
+        </div>
+    </div>
+    
+    <div class="info-panel">
+        <div>
+            <span class="label">当前状态:</span>
+            <span class="value" id="status-text">检查中...</span>
+        </div>
+        <div>
+            <span class="label">最后更新:</span>
+            <span class="value" id="last-update">-</span>
+        </div>
+    </div>
+
+    <script>
+        function checkStatus() {
+            const hour = new Date().getHours();
+            const isWorking = hour >= 9 && hour < 18;
+            
+            const bedroom = document.getElementById('bedroom');
+            const office = document.getElementById('office');
+            const statusText = document.getElementById('status-text');
+            const lastUpdate = document.getElementById('last-update');
+            
+            if (isWorking) {
+                bedroom.classList.add('inactive');
+                bedroom.classList.remove('active');
+                office.classList.add('active');
+                office.classList.remove('inactive');
+                statusText.textContent = '工作中 💻';
+            } else {
+                office.classList.add('inactive');
+                office.classList.remove('active');
+                bedroom.classList.add('active');
+                bedroom.classList.remove('inactive');
+                statusText.textContent = '闲置中 😴';
+            }
+            
+            lastUpdate.textContent = new Date().toLocaleTimeString('zh-CN');
+        }
+        
+        checkStatus();
+        setInterval(checkStatus, 10000);
+    </script>
 </body>
 </html>
